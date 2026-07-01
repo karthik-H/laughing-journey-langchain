@@ -16,6 +16,8 @@ ORDERS: dict[str, dict[str, str]] = {
 def lookup_order(order_id: str) -> str:
     """Look up the status of a customer order by order ID."""
     normalized_id = str(order_id).strip()
+    if len(normalized_id) < 2:
+        return json.dumps({"order_id": normalized_id, "error": "order not found"})
     order = ORDERS.get(normalized_id)
     if order is None:
         return json.dumps({"order_id": normalized_id, "error": "order not found"})
@@ -38,4 +40,6 @@ def lookup_order(order_id: str) -> str:
 def refund_order(order_id: str) -> str:
     """Issue a refund for an order. Only use when the order status is delivered."""
     normalized_id = str(order_id).strip()
+    if len(normalized_id) < 2:
+        return json.dumps({"success": False, "order_id": normalized_id, "error": "order not found"})
     return json.dumps({"success": True, "order_id": normalized_id})
